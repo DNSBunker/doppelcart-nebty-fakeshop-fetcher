@@ -1,27 +1,3 @@
-"""
-Scraper fuer die Fake-Domain-Liste von investigations.nebty-id.com.
-
-Verbesserungen ggue. der Ursprungsversion:
-  - Doppelte Retry-Absicherung: urllib3-Retry-Adapter + manueller Backoff-Loop
-    fuer Faelle, die ueber die Session-Retries hinausgehen (z.B. harte
-    Verbindungsabbrueche oder ein 429, das trotz Adapter durchrutscht).
-  - Respektiert den 'Retry-After'-Header bei 429 statt starr zu warten.
-  - Proaktive kleine Pause zwischen Requests, um das Rate-Limit gar nicht
-    erst zu reizen.
-  - Automatische Fortsetzung: Fortschritt (aktuelle Seite + bereits
-    gesammelte Domains) wird in einer State-Datei gesichert. Bei einem
-    Absturz, Strg+C oder einfach einem erneuten Start wird dort
-    weitergemacht statt von vorne zu beginnen.
-  - Domains werden als Set gesammelt -> keine Duplikate, auch wenn nach
-    einem Abbruch eine Seite doppelt abgerufen wird.
-  - total_pages/total wird bei jeder Seite neu aus der Antwort gelesen,
-    falls sich der Datenbestand waehrend des Laufs aendert.
-  - Nach einem vollstaendigen Lauf: Vergleich mit dem Snapshot des
-    letzten Laufs -> neue/entfernte Domains landen in eigenen Dateien,
-    damit du bei jedem kuenftigen Abgleich sofort siehst, was sich
-    veraendert hat.
-"""
-
 import json
 import logging
 import random
